@@ -26,9 +26,8 @@ export default {
 
 <style lang="scss" scoped>
 .movie-list {
-  margin-right: 2rem;
   display: grid;
-  grid-gap: 2rem;
+  grid-gap: 1rem;
   grid-template-columns: repeat(4, 1fr);
 
   @media (max-width: 1180px) {

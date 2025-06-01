@@ -6,14 +6,15 @@
       :fields="dataFields"
       :showClearButton="false"
       :highlight="true"
-      placeholder="Select a movie"
+      placeholder="Search a movie"
+      class="app-search-input__select"
     />
     <button
       class="app-search-input__button"
       @keyup.enter="getSearchMoveisData"
       @click.prevent="getSearchMoveisData"
     >
-      Go
+      Search
     </button>
   </form>
 </template>
@@ -56,11 +57,18 @@ export default {
 @import url(https://cdn.syncfusion.com/ej2/material.css);
 
 .app-search-input {
+  &__select {
+    padding: 4px 6px !important;
+    border-radius: 12px !important;
+    border: none !important;
+    background: transparent !important;
+    margin-bottom: 4px !important;
+  }
+
   &__button {
     position: absolute;
-    right: 0;
     top: 3px;
-    padding: 2px 10px;
+    padding: 4px 16px;
     background: no-repeat;
     border: 1px solid #333;
     border-radius: 3rem;
@@ -70,8 +78,7 @@ export default {
     transition: all .2s ease;
 
     &:hover {
-      color: #fff;
-      background-color: #333;
+      background-color: #ccc;
     }
   }
 }

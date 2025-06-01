@@ -29,7 +29,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: color .2s ease;
+  transition: color 0.2s ease;
 
   &__author-link {
     display: flex;
