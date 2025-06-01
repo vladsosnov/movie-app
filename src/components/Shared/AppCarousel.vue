@@ -32,7 +32,7 @@
         </p>
         <button
           class="detail__save-btn"
-          @click.prevent="onAddMovieToSavedClick(newMovie)"
+          @click.stop.prevent="onAddMovieToSavedClick(newMovie)"
         >
           Save movie
         </button>
@@ -59,9 +59,23 @@ export default {
         overview: movie.overview
       }
 
-      allSavedMovies.some(item => item.id === movie.id) !== true 
-        ? this.$store.dispatch('addMovieToSaved', newMovieData)
-        : ''
+      const isAlreadySaved = allSavedMovies.some(item => item.id === movie.id)
+
+      if (!isAlreadySaved) {
+        this.$store.dispatch('addMovieToSaved', newMovieData)
+        this.$toasted.show(`"${movie.title}" added to saved!`, {
+          type: 'success',
+          duration: 3000,
+          theme: 'outline',
+          position: 'top-right'
+        })
+      } else {
+        this.$toasted.show(`"${movie.title}" is already saved.`, {
+          type: 'info',
+          duration: 3000,
+          position: 'top-right'
+        })
+      }
     }
   }
 }
@@ -77,68 +91,85 @@ export default {
 
   &__slide {
     display: flex;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.01);
+    }
 
     &:not(:last-child) {
       margin-right: 1rem;
     }
 
-    .slide-wrap {
-      display: flex;
-      align-items: flex-start;
-      text-decoration: none;
-      color: #333;
+    .slide__image {
+      width: 140px;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
     }
 
-    .slide {
-      &__detail {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+    .slide__detail {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      color: #333;
 
-        .detail {
-          &__title {
-            margin-right: .5rem;
-            font-size: 1.1rem;
-            letter-spacing: .5px;
-          }
-
-          &__vote {
-            font-size: .8rem;
-            letter-spacing: .2px;
-            font-weight: 600;
-          }
-
-          &__overview {
-            max-width: 400px;
-            margin-top: 0;
-          }
-
-          &__release {
-            margin-top: 0;
-          }
-
-          &__save-btn {
-            border: 1px solid #333;
-            max-width: 10rem;
-            padding: .5rem 1rem;
-            border-radius: 3rem;
-            transition: background-color .2s ease;
-            background: none;
-            outline: none;
-            cursor: pointer;
-
-            &:hover {
-              background-color: #ccc
-            }
-          }
-        }
+      .detail__title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
       }
-      
-      &__image {
-        max-width: 180px;
-        margin-right: 1rem;
+
+      .detail__vote {
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-left: 0.4rem;
+      }
+
+      .detail__overview {
+        font-size: 0.95rem;
+        color: #666;
+        line-height: 1.4;
+        margin: 0.5rem 0;
+        max-height: 4.2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .detail__release {
+        font-size: 0.85rem;
+        color: #999;
+        margin-bottom: 0.8rem;
+      }
+
+      .detail__save-btn {
+        align-self: flex-start;
+        background-color: #007bff;
+        color: #fff;
+        padding: 0.5rem 1.2rem;
+        border: none;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        line-height: 15px;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: #0056b3;
+        }
       }
     }
   }
 }
+
+
 </style>

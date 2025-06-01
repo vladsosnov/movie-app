@@ -1,22 +1,24 @@
 <template>
   <header class="app-header">
     <div class="app-header__container">
-      <router-link :to="{ name: 'Main' }">
-        <img
-          src="@/assets/images/movie-logo.svg"
-          alt="Logo"
-          class="app-header__logo"
-        >
-      </router-link>
-      <nav class="app-header__nav nav">
-        <router-link
-          :to="{name: 'SavedMovies'}"
-          class="nav__item"
-          active-class="nav__item--active"
-        >
-          Saved Movies
+      <div class="app-header__links">
+        <router-link :to="{ name: 'Main' }">
+          <img
+            src="@/assets/images/movie-logo.svg"
+            alt="Logo"
+            class="app-header__logo"
+          >
         </router-link>
-      </nav>
+        <nav class="app-header__nav nav">
+          <router-link
+            :to="{name: 'SavedMovies'}"
+            class="nav__item"
+            active-class="nav__item--active"
+          >
+            Saved movies
+          </router-link>
+        </nav>
+      </div>
       <app-search-input
         :autoCompleteMoviesTitle="autoCompleteMoviesTitle"
         class="app-header__search-box"
@@ -74,12 +76,18 @@ export default {
     max-width: 4rem;
   }
 
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
   &__nav {
     .nav {
       &__item {
         text-decoration: none;
         color: #333;
-        font-size: 1.2rem;
+        font-size: 1rem;
         transition: color .2s ease;
 
         &:hover {

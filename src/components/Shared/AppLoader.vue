@@ -1,26 +1,8 @@
 <template>
-   <section class="app-loader">
-    <div class="app-loader__circle-list circle-list">
-      <span class="circle-list__item" style="--i:1;"></span>
-      <span class="circle-list__item" style="--i:2;"></span>
-      <span class="circle-list__item" style="--i:3;"></span>
-      <span class="circle-list__item" style="--i:4;"></span>
-      <span class="circle-list__item" style="--i:5;"></span>
-      <span class="circle-list__item" style="--i:6;"></span>
-      <span class="circle-list__item" style="--i:7;"></span>
-      <span class="circle-list__item" style="--i:8;"></span>
-      <span class="circle-list__item" style="--i:9;"></span>
-      <span class="circle-list__item" style="--i:10;"></span>
-      <span class="circle-list__item" style="--i:11;"></span>
-      <span class="circle-list__item" style="--i:12;"></span>
-      <span class="circle-list__item" style="--i:13;"></span>
-      <span class="circle-list__item" style="--i:14;"></span>
-      <span class="circle-list__item" style="--i:15;"></span>
-      <span class="circle-list__item" style="--i:16;"></span>
-      <span class="circle-list__item" style="--i:17;"></span>
-      <span class="circle-list__item" style="--i:18;"></span>
-      <span class="circle-list__item" style="--i:19;"></span>
-      <span class="circle-list__item" style="--i:20;"></span>
+  <section class="app-loader">
+    <div class="loader-content">
+      <div class="pulse-dot"></div>
+      <p class="loading-text">Loading...</p>
     </div>
   </section>
 </template>
@@ -37,55 +19,40 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: .3s ease-in;
+  color: #0f0f0f;
+}
 
-  &__circle-list {
-    position: relative;
-    width: 7.5rem;
-    height: 7.5rem;
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
 
-    .circle-list {
-      &__item {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        transform: rotate(calc(18deg * var(--i)));
+.pulse-dot {
+  width: 12px;
+  height: 12px;
+  background: #00f2ff;
+  border-radius: 50%;
+  animation: pulse 1s infinite ease-in-out;
+  box-shadow: 0 0 6px #00f2ff88;
+}
 
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 1rem;
-          height: 1rem;
-          border-radius: 50%;
-          background-color: #00ff0a;
-          box-shadow: 0 0 10px #00ff0a
-                      0 0 20px #00ff0a
-                      0 0 40px #00ff0a
-                      0 0 60px #00ff0a
-                      0 0 10px #00ff0a
-                      0 0 100px #00ff0a;
-          animation: circleAnimate 2s linear infinite;
-          animation-delay: calc(.1s * var(--i));
-        }
+.loading-text {
+  font-size: 0.9rem;
+  color: #0f0f0f;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
 
-        @keyframes circleAnimate {
-          0% {
-            transform: scale(1);
-            filter: hue-rotate(0deg);
-          }
-
-          80%, 100% {
-            transform: scale(0);
-            filter: hue-rotate(360deg);
-          }
-        }
-      }
-    }
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 1;
   }
 }
 </style>
-

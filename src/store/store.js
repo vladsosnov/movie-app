@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     searchMovies: [],
-    savedMovies: [],
+    pendingDeletion: null,
+    savedMovies: JSON.parse(localStorage.getItem('savedMovies')) || [],
     isSearchResultVisible: false
   },
   getters: {
@@ -18,18 +19,25 @@ export const store = new Vuex.Store({
     setSearchMovies (state, searchMovies) {
       state.searchMovies = searchMovies
     },
-    addMovieToSaved (state, movie) {
-      state.savedMovies.push({
-        id: movie.id,
-        title: movie.title,
-        poster_path: movie.poster_path,
-        overview: movie.overview
-      })
+    setPendingDeletion(state, payload) {
+      state.pendingDeletion = payload;
     },
-    async deleteMovieFromSaved (state, id) {
-      const index = state.savedMovies.findIndex(item => item.id === id)
-
-      state.savedMovies.splice(index, 1)
+    clearPendingDeletion(state) {
+      state.pendingDeletion = null;
+    },
+    addMovieToSaved(state, movie) {
+      const exists = state.savedMovies.some(item => item.id === movie.id);
+      if (!exists) {
+        state.savedMovies.push(movie);
+        localStorage.setItem('savedMovies', JSON.stringify(state.savedMovies));
+      }
+    },
+    removeMovie(state, id) {
+      const index = state.savedMovies.findIndex(item => item.id === id);
+      if (index !== -1) {
+        state.savedMovies.splice(index, 1);
+        localStorage.setItem('savedMovies', JSON.stringify(state.savedMovies));
+      }
     },
     setSearchResultVisibility (state) {
       state.isSearchResultVisible = !state.isSearchResultVisible
@@ -39,11 +47,31 @@ export const store = new Vuex.Store({
     setSearchMovies (context, searchMovies) {
       context.commit('setSearchMovies', searchMovies)
     },
-    addMovieToSaved (context, movie) {
-      context.commit('addMovieToSaved', movie)
+    addMovieToSaved({ commit }, movie) {
+      commit('addMovieToSaved', movie)
     },
-    async deleteMovieFromSaved (context, id) {
-      context.commit('deleteMovieFromSaved', id)
+    pendingDeleteMovie({ commit, state }, movie) {
+      commit('removeMovie', movie.id);
+
+      if (state.pendingDeletion) {
+        clearTimeout(state.pendingDeletion.timerId);
+        commit('clearPendingDeletion');
+      }
+
+      const timerId = setTimeout(() => {
+        commit('clearPendingDeletion');
+      }, 5000);
+
+      commit('setPendingDeletion', { movie, timerId });
     },
+
+    undoDelete({ commit, state }) {
+      if (state.pendingDeletion) {
+        clearTimeout(state.pendingDeletion.timerId);
+        const movie = state.pendingDeletion.movie;
+        commit('clearPendingDeletion');
+        commit('addMovieToSaved', movie);
+      }
+    }
   }
-})
+});

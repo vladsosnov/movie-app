@@ -2,28 +2,71 @@
   <div class="app-pagination">
     <button
       @click.prevent="onPrevBtnClick"
-      class="app-pagination__prev-button"
+      :disabled="currentPage === 1"
+      class="app-pagination__button"
     >
-      previous
+      Prev
     </button>
+
+    <button
+      v-for="page in visiblePages"
+      :key="page"
+      :class="['app-pagination__number', { active: page === currentPage }]"
+      @click="onPageClick(page)"
+    >
+      {{ page }}
+    </button>
+
     <button
       @click.prevent="onNextBtnClick"
-      class="app-pagination__next-button"
+      :disabled="currentPage === totalPages"
+      class="app-pagination__button"
     >
-      next
+      Next
     </button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'AppPaginaton',
+  name: 'AppPagination',
+  props: {
+    currentPage: {
+      type: Number,
+      required: true
+    },
+    totalPages: {
+      type: Number,
+      default: 20
+    }
+  },
+  computed: {
+    visiblePages () {
+      const range = []
+      const maxButtons = 5
+      let start = Math.max(this.currentPage - 2, 1)
+      let end = Math.min(start + maxButtons - 1, this.totalPages)
+
+      if (end - start < maxButtons - 1) {
+        start = Math.max(end - maxButtons + 1, 1)
+      }
+
+      for (let i = start; i <= end; i++) {
+        range.push(i)
+      }
+
+      return range
+    }
+  },
   methods: {
     onPrevBtnClick () {
       this.$emit('prev-button')
     },
     onNextBtnClick () {
       this.$emit('next-button')
+    },
+    onPageClick (page) {
+      this.$emit('page-click', page)
     }
   }
 }
@@ -31,33 +74,33 @@ export default {
 
 <style lang="scss" scoped>
 .app-pagination {
-  max-width: 58.5rem;
-  margin-bottom: 3rem;
+  max-width: 940px;
   display: flex;
   justify-content: center;
-  text-align: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
 
-  &__prev-button,
-  &__next-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
-    padding: 4px;
-    border-radius: 3rem;
+  &__button,
+  &__number {
     border: 1px solid #333;
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
     cursor: pointer;
-    outline: none;
-    transition: all .2s ease;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
 
-    &:hover {
-      color: #fff;
-      background-color: #333;
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 
-  &__prev-button {
-    margin-right: 2rem;
+  &__number.active {
+    background-color: #333;
+    color: white;
   }
 }
 </style>

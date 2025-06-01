@@ -125,11 +125,19 @@ export default {
 
   .close-icon {
     position: absolute;
-    top: 0;
+    top: 1rem;
     right: 1rem;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    color: #666;
     cursor: pointer;
-    transition: transform .2s ease;
+    background-color: #f2f2f2;
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
   }
 }
 </style>

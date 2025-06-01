@@ -1,5 +1,6 @@
 <template>
   <main class="main-view">
+    <h2 class="main-view__title">Popular movies</h2>
     <app-carousel :newMovies="newMovies" />
     <app-sort
       @sort-type-choosen="onSortTypeBtnClick"
@@ -16,8 +17,11 @@
       v-else
     />
     <app-pagination
+      :currentPage="currentPage"
+      :totalPages="totalPages"
       @prev-button="onPrevBtnClick"
       @next-button="onNextBtnClick"
+      @page-click="onPageClick"
     />
   </main>
 </template>
@@ -105,6 +109,7 @@ export default {
         }
       ],
       currentPage: 1,
+      totalPages: 1,
       sortType: 'popularity',
       sortSide: 'desc',
       loaderStatus: false
@@ -123,6 +128,7 @@ export default {
         `)
 
         this.movies = {...fetchData.data.results}
+        this.totalPages = fetchData.data.total_pages
         setTimeout(() => this.loaderStatus = true, 1000)
       }
       catch (error) {
@@ -135,6 +141,10 @@ export default {
     },
     async onChangeSideBtnClick () {
       this.sortSide === 'desc' ? this.sortSide = 'asc' : this.sortSide = 'desc'
+      await this.fetchMovies()
+    },
+    async onPageClick(page) {
+      this.currentPage = page
       await this.fetchMovies()
     },
     async onPrevBtnClick () {
@@ -154,16 +164,52 @@ export default {
 <style lang="scss" scoped>
 .main-view {
   max-width: 80rem;
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 100vh;
+
+  &__title {
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
 
   &__content {
-    position: relative;
     display: flex;
+    justify-content: space-between;
+    gap: 2rem;
     margin-bottom: 3rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 992px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}
+
+.movie-list {
+  min-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.soon-movie-sidebar {
+  flex: 0 1 35%;
+  min-width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: #f9f9f9;
+
+  @media (max-width: 992px) {
+    width: 100%;
+    margin-top: 1.5rem;
   }
 }
 </style>

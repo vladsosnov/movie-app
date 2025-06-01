@@ -1,22 +1,26 @@
 <template>
+
   <aside class="soon-movie-sidebar">
-    <h2 class="soon-movie-sidebar__title">
-      Soon on the site
-    </h2>
+
+    <h2 class="soon-movie-sidebar__title"> Soon on the site </h2>
+
     <div
       v-for="soonMovie in soonMovies"
       :key="soonMovie.id"
       class="soon-movie-sidebar__movies movie"
     >
+
       <img
-        v-if="soonMovie.poster_path !== null" 
-        :src="soonMovie.image" 
+        v-if="soonMovie.poster_path !== null"
+        :src="soonMovie.image"
         :alt="soonMovie.title"
         class="movie__image"
-      >
-      {{ soonMovie.title }}
+      />
+       {{ soonMovie.title }}
     </div>
+
   </aside>
+
 </template>
 
 <script>
@@ -33,7 +37,7 @@ export default {
 <style lang="scss" scoped>
 .soon-movie-sidebar {
   width: 100%;
-  max-width: 310px;
+  max-width: 260px;
 
   @media (max-width: 768px) {
     display: none;
@@ -62,3 +66,4 @@ export default {
   }
 }
 </style>
+
